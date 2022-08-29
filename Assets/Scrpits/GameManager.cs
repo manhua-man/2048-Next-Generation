@@ -11,9 +11,9 @@ using UnityEngine;
 
 namespace DYFPS
 {
-    
-public class GameManager : MonoBehaviour
-{
+
+    public class GameManager : MonoBehaviour
+    {
         //背景图片
         [SerializeField]
         private GameObject BgSprite;
@@ -21,10 +21,15 @@ public class GameManager : MonoBehaviour
         private float OffsetY = 1.1f; //xy加个0.1，有个间隙
         private float OffsetX = 1.1f;
 
-    void Start()
-    {
+       
+
+        void Start()
+        {
             CreateBG();
-    }
+            CreateCard();
+
+
+        }
         void CreateBG()
         {
             GameObject BG = new GameObject("BG");//创建空游戏对象作为背景预制体//是否在scene视图直接挂载比较好
@@ -38,10 +43,37 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-   
-    void Update()
-    {
-        
+
+        void CreateCard()
+        {
+
+        }
+
+        void Update()
+        {
+            if (true)
+            {
+
+            }
+        }
+        void MoveUp()
+        {
+
+        }
+
+        void MoveDown()
+        {
+
+        }
+
+        void MoveLeft()
+        {
+
+        }
+
+        void MoveRight()
+        {
+
+        }
     }
-}
 }
