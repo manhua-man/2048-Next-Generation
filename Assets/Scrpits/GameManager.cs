@@ -8,6 +8,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace DYFPS
 {
@@ -17,14 +18,17 @@ namespace DYFPS
         //背景图片
         [SerializeField]
         private GameObject BgSprite;
+
         private Vector2 BeginPos = new Vector2(-1.5f, 1.5f);//起始点
         private float OffsetY = 1.1f; //xy加个0.1，有个间隙
         private float OffsetX = 1.1f;
 
-       
+        private Vector2 move;
+        private PlayerInput player;
 
         void Start()
         {
+           
             CreateBG();
             CreateCard();
 
@@ -56,9 +60,25 @@ namespace DYFPS
 
             }
         }
-        void MoveUp()
+        void MoveUp(InputAction.CallbackContext callback)
         {
-
+            switch (callback.phase)
+            {
+                case InputActionPhase.Disabled:
+                    break;
+                case InputActionPhase.Waiting:
+                    break;
+                case InputActionPhase.Started:
+                    break;
+                case InputActionPhase.Performed:
+                    Debug.Log("移动中");
+                    break;
+                case InputActionPhase.Canceled:
+                    break;
+                default:
+                    break;
+            }
+            move = callback.ReadValue<Vector2>();
         }
 
         void MoveDown()
@@ -75,5 +95,27 @@ namespace DYFPS
         {
 
         }
+
+        //private void sur(PlayerInput input)
+        //{
+
+        //    for (int i = 0; i < input.currentActionMap.actions.Count; i++)
+        //    {
+        //        if (input.currentActionMap.actions[i].name == "Fire")
+        //        {
+        //            input.currentActionMap.actions[i].performed += SwitchRounds_performed;
+        //        }
+        //    }
+        //    // 添加订阅者函数, 当然也可以写成独立的函数
+        //    player = GetComponent<PlayerInput>().onActionTriggered +=
+        //        callback =>
+        //        {
+        //            if (callback.action.name == "Move")
+        //            {
+        //                move = callback.ReadValue<Vector2>();
+        //            }
+        //        };
+
+        //}
     }
 }
