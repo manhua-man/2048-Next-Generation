@@ -24,15 +24,33 @@ namespace DYFPS
         private float OffsetX = 1.1f;
 
         private Vector2 move;
+        [SerializeField]
         private PlayerInput player;
+        public GameObject card;//卡片对象
+
+      
+        private GameObject[,] cardList = new GameObject[4, 4];//卡片游戏对象对应的棋盘格子  //*这一步没想到
+        private int CardNum = 0;//棋盘格子的卡片计数，用于满格后重新开始游戏
+
 
         void Start()
         {
-           
+
             CreateBG();
             CreateCard();
+            player.EnableGameplayInput();
 
+        }
+        private void OnEnable()
+        {
+            player.onMove += Move;
+            player.onStopMove += StopMove;
+        }
+        private void OnDisable()
+        {
 
+            player.onMove -= Move;
+            player.onStopMove -= StopMove;
         }
         void CreateBG()
         {
@@ -50,72 +68,104 @@ namespace DYFPS
 
         void CreateCard()
         {
-
+            CardNum = 0;
+            foreach (var item in cardList)
+            {
+                if (item)
+                {
+                    CardNum++;
+                }
+                if (CardNum>=16)
+                {
+                    ResetGame();
+                    return;
+                }
+                int X_index, Y_index = 0;
+                do
+                {
+                    X_index = Random.Range(0, 4);
+                    Y_index = Random.Range(0,4);
+                } while (cardList[X_index,Y_index]);
+                Vector2 newPos = GetPosVector2(X_index, Y_index);
+                if (Random.Range(0.0F,1.0F)>0.5F)
+                {
+                    cardList[X_index, Y_index].GetComponent<Card>().Generate(1);
+                }
+                else
+                {
+                    cardList[X_index, Y_index].GetComponent<Card>().Generate(2);
+                }
+            }
         }
 
         void Update()
         {
-            if (true)
-            {
+            
+        }
 
+
+        void Move(Vector2 monveInput)
+        {
+            CreateCard();
+            MoveCard();
+        }
+
+        void StopMove()
+        {
+
+        }
+        void ResetGame()
+        {
+            foreach (var card in cardList)
+            {
+                if (card != null)
+                {
+                    Destroy(card);
+                }
+                cardList = new GameObject[4, 4];
             }
         }
-        void MoveUp(InputAction.CallbackContext callback)
+        public Vector2 GetPosVector2(int x, int y)
         {
-            switch (callback.phase)
+            return new Vector2(BeginPos.x + y * OffsetX, BeginPos.y - x * OffsetY);
+        }
+
+        void MoveCard()
+        {
+            for (int i = 0; i < 4; i++)
             {
-                case InputActionPhase.Disabled:
-                    break;
-                case InputActionPhase.Waiting:
-                    break;
-                case InputActionPhase.Started:
-                    break;
-                case InputActionPhase.Performed:
-                    Debug.Log("移动中");
-                    break;
-                case InputActionPhase.Canceled:
-                    break;
-                default:
-                    break;
+                for(int j = 0; j < 4; j++)
+                {
+                    if (cardList[i,j]!=null)//当找到其中的卡片后
+                    {
+                        GameObject temp = cardList[i, j];//保留该卡片的引用
+                        int x = i;
+                        int y = j;
+                        bool isFind = false;//设置查找标识
+                        while (!isFind)
+                        {
+                            x--;//根据方向的不同  x--是向上 x++是向下
+                            if (x < 0 || cardList[x, y])//达到边界或找到卡片后
+                            {
+                                isFind = true;
+                                //判断值是否相同，相同的话合并操作
+                                if (x >= 0 && cardList[x, y].GetComponent<Card>()._currentIndex == cardList[i, j].GetComponent<Card>()._currentIndex)
+                                {
+                                    cardList[x, y].GetComponent<Card>().Merge();
+                                    Destroy(cardList[i, j]);
+                                    cardList[i, j] = null;
+                                }
+                                else//否则移动即可
+                                {
+                                    cardList[i, j] = null;
+                                    cardList[x + 1, y] = temp;
+                                    cardList[x + 1, y].transform.position = GetPosVector2(x + 1, y);
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            move = callback.ReadValue<Vector2>();
         }
-
-        void MoveDown()
-        {
-
-        }
-
-        void MoveLeft()
-        {
-
-        }
-
-        void MoveRight()
-        {
-
-        }
-
-        //private void sur(PlayerInput input)
-        //{
-
-        //    for (int i = 0; i < input.currentActionMap.actions.Count; i++)
-        //    {
-        //        if (input.currentActionMap.actions[i].name == "Fire")
-        //        {
-        //            input.currentActionMap.actions[i].performed += SwitchRounds_performed;
-        //        }
-        //    }
-        //    // 添加订阅者函数, 当然也可以写成独立的函数
-        //    player = GetComponent<PlayerInput>().onActionTriggered +=
-        //        callback =>
-        //        {
-        //            if (callback.action.name == "Move")
-        //            {
-        //                move = callback.ReadValue<Vector2>();
-        //            }
-        //        };
-
-        //}
     }
 }
