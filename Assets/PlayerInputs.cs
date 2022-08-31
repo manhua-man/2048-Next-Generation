@@ -32,20 +32,7 @@ public class PlayerInputs : ScriptableObject,InputActions.IGameplayActions
     {
         inputActions.Gameplay.Disable();
     }
-    public void OnDodge(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnFire(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnLaunchMissile(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
+  
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -59,15 +46,7 @@ public class PlayerInputs : ScriptableObject,InputActions.IGameplayActions
         }
     }
 
-    public void OnOverdrive(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnPause(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
+    
 
    
 }

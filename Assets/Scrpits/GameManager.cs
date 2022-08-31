@@ -23,23 +23,25 @@ namespace DYFPS
         private float OffsetY = 1.1f; //xy加个0.1，有个间隙
         private float OffsetX = 1.1f;
 
-        
+
         private Vector2 move;
         [SerializeField]
         private PlayerInputs player;
         public GameObject card;//卡片对象
+        //private GameModel gameModel;
 
-      
+
         private GameObject[,] cardList = new GameObject[4, 4];//卡片游戏对象对应的棋盘格子  //*这一步没想到
         private int CardNum = 0;//棋盘格子的卡片计数，用于满格后重新开始游戏
 
 
         void Start()
         {
-            //var key = Keyboard.current;
             CreateBG();
             CreateCard();
+            CreateCard();
             player.EnablePlayInput();
+           // gameModel = new GameModel();
 
         }
         private void OnEnable()
@@ -76,55 +78,71 @@ namespace DYFPS
                 {
                     CardNum++;
                 }
-                if (CardNum>=16)
-                {
-                    ResetGame();
-                    return;
-                }
-                int X_index, Y_index = 0;
-                do
-                {
-                    X_index = Random.Range(0, 4);
-                    Y_index = Random.Range(0,4);
-                } while (cardList[X_index,Y_index]);
-                Vector2 newPos = GetPosVector2(X_index, Y_index);
+            }
+            if (CardNum >= 16)
+            {
+                
+                ResetGame();
+                return;
+            }
 
-                cardList[X_index, Y_index] = Instantiate(card, newPos, Quaternion.identity);
-                if (Random.Range(0.0f,1.0f)>0.5f)
-                {
-                    cardList[X_index, Y_index].GetComponent<Card>().Generate(1);
-                }
-                else
-                {
-                    cardList[X_index, Y_index].GetComponent<Card>().Generate(2);
-                }
+            int X_index, Y_index = 0;
+            do
+            {
+                X_index = Random.Range(0, 4);
+                Y_index = Random.Range(0, 4);
+            } while (cardList[X_index, Y_index]);
+            Vector2 newPos = GetPosVector2(X_index, Y_index);
+
+            cardList[X_index, Y_index] = Instantiate(card, newPos, Quaternion.identity);
+            if (Random.Range(0.0f, 1.0f) > 0.5f)
+            {
+                cardList[X_index, Y_index].GetComponent<Card>().Generate(1);
+            }
+            else
+            {
+                cardList[X_index, Y_index].GetComponent<Card>().Generate(2);
             }
         }
-
+        void SucceedGame()
+        {
+            foreach (var item in cardList)
+            {
+                if (item.GetComponent<Card>()._currentIndex>=11)
+                {
+                    Debug.Log("游戏完成");
+                    break;
+                }
+            }
+            ResetGame();
+        }
         void Update()
         {
-            
+
+          
+
         }
 
 
         void Move(Vector2 moveInput)
         {
             CreateCard();
-            if (moveInput.x>0)
+            if (moveInput.x > 0)
             {
-                MoveCardUp();
+
+                MoveCardRight();
             }
-            else if (moveInput.x<0)
-            {
-                MoveCardDown();
-            }
-            else if (moveInput.y>0)
+            else if (moveInput.x < 0)
             {
                 MoveCardLeft();
             }
+            else if (moveInput.y > 0)
+            {
+                MoveCardUp();
+            }
             else if (moveInput.y < 0)
             {
-                MoveCardRight();
+                MoveCardDown();
             }
 
         }
@@ -148,7 +166,8 @@ namespace DYFPS
         {
             return new Vector2(BeginPos.x + y * OffsetX, BeginPos.y - x * OffsetY);
         }
-
+        #region
+        //向右
         void MoveCardRight()
         {
             for (int i = 0; i < 4; i++)
@@ -264,9 +283,9 @@ namespace DYFPS
         {
             for (int i = 0; i < 4; i++)
             {
-                for(int j = 0; j < 4; j++)
+                for (int j = 0; j < 4; j++)
                 {
-                    if (cardList[i,j]!=null)//当找到其中的卡片后
+                    if (cardList[i, j] != null)//当找到其中的卡片后
                     {
                         GameObject temp = cardList[i, j];//保留该卡片的引用
                         int x = i;
@@ -297,5 +316,6 @@ namespace DYFPS
                 }
             }
         }
+        #endregion
     }
 }
