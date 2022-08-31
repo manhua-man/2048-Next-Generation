@@ -313,3 +313,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BgSprite: {fileID: 9136923188326103709, guid: 8b14e6d8fd6138646a31b6e21dae7bbd, type: 3}
+  player: {fileID: 11400000, guid: e477062d313f06d47835f539de1e26f6, type: 2}
+  card: {fileID: 3859164436614274466, guid: d739283943ed03e4eb798e423676cd5a, type: 3}

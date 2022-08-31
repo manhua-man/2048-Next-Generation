@@ -15,7 +15,7 @@ namespace DYFPS
     public class Card : MonoBehaviour
     {
 
-        [SerializeField]
+        
         public Sprite[] CardSprites;//读取图集中所有切片
         private string fileName = "2048";//图集名字
         public int _currentIndex = 0;//当前卡片的显示编号
